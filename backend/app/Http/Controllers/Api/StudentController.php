@@ -21,7 +21,7 @@ class StudentController extends Controller
         $data = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
-            'student_id' => 'required|string|unique:students,student_id',
+            'student_id_number' => 'required|string|unique:students,student_id_number',
             'class_id' => 'required|exists:class_rooms,id',
         ]);
 
@@ -34,7 +34,7 @@ class StudentController extends Controller
 
         $student = Student::create([
             'user_id' => $user->id,
-            'student_id' => $data['student_id'],
+            'student_id_number' => $data['student_id_number'],
             'class_id' => $data['class_id'],
         ]);
 
@@ -51,7 +51,7 @@ class StudentController extends Controller
         $data = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $student->user_id,
-            'student_id' => 'required|string|unique:students,student_id,' . $student->id,
+            'student_id_number' => 'required|string|unique:students,student_id_number,' . $student->id,
             'class_id' => 'required|exists:class_rooms,id',
         ]);
 
@@ -61,7 +61,7 @@ class StudentController extends Controller
         ]);
 
         $student->update([
-            'student_id' => $data['student_id'],
+            'student_id_number' => $data['student_id_number'],
             'class_id' => $data['class_id'],
         ]);
 

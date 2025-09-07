@@ -64,11 +64,11 @@ class DemoDataSeeder extends Seeder
 
         // Create students
         $students = [
-            ['name' => 'Ahmad Rizki', 'email' => 'ahmad@student.com', 'student_id' => 'S001', 'class_id' => $class1->id],
-            ['name' => 'Dewi Sari', 'email' => 'dewi@student.com', 'student_id' => 'S002', 'class_id' => $class1->id],
-            ['name' => 'Reza Pratama', 'email' => 'reza@student.com', 'student_id' => 'S003', 'class_id' => $class1->id],
-            ['name' => 'Maya Sari', 'email' => 'maya@student.com', 'student_id' => 'S004', 'class_id' => $class2->id],
-            ['name' => 'Andi Wijaya', 'email' => 'andi@student.com', 'student_id' => 'S005', 'class_id' => $class2->id],
+            ['name' => 'Ahmad Rizki', 'email' => 'ahmad@student.com', 'student_id_number' => 'S001', 'class_id' => $class1->id],
+            ['name' => 'Dewi Sari', 'email' => 'dewi@student.com', 'student_id_number' => 'S002', 'class_id' => $class1->id],
+            ['name' => 'Reza Pratama', 'email' => 'reza@student.com', 'student_id_number' => 'S003', 'class_id' => $class1->id],
+            ['name' => 'Maya Sari', 'email' => 'maya@student.com', 'student_id_number' => 'S004', 'class_id' => $class2->id],
+            ['name' => 'Andi Wijaya', 'email' => 'andi@student.com', 'student_id_number' => 'S005', 'class_id' => $class2->id],
         ];
 
         foreach ($students as $studentData) {
@@ -81,7 +81,7 @@ class DemoDataSeeder extends Seeder
 
             Student::create([
                 'user_id' => $user->id,
-                'student_id' => $studentData['student_id'],
+                'student_id_number' => $studentData['student_id_number'],
                 'class_id' => $studentData['class_id'],
             ]);
         }
