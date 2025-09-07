@@ -1,0 +1,70 @@
+services:
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_DATABASE: attendance
+      MYSQL_USER: app
+      MYSQL_PASSWORD: app
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3313:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6388:6379"
+  mailhog:
+    image: mailhog/mailhog:latest
+    ports:
+      - "8033:8025"
+  soketi:
+    image: quay.io/soketi/soketi:latest-16-alpine
+    environment:
+      SOKETI_DEFAULT_APP_ID: app-id
+      SOKETI_DEFAULT_APP_KEY: app-key
+      SOKETI_DEFAULT_APP_SECRET: app-secret
+      SOKETI_METRICS_SERVER_PORT: 9601
+    ports:
+      - "6006:6001"
+      - "9606:9601"
+  php:
+    image: composer:2
+    working_dir: /var/www/html
+    volumes:
+      - ./backend:/var/www/html
+    environment:
+      COMPOSER_MEMORY_LIMIT: -1
+    command: bash -lc "if [ ! -f composer.json ]; then composer create-project laravel/laravel .; fi && php artisan key:generate && php -S 0.0.0.0:9000 -t public public/index.php"
+    depends_on:
+      - mysql
+      - redis
+    ports:
+      - "9010:9000"
+  nginx:
+    image: nginx:alpine
+    depends_on:
+      - php
+      - nextjs
+    ports:
+      - "8086:80"
+    volumes:
+      - ./docker/nginx/conf.d:/etc/nginx/conf.d
+      - ./backend:/var/www/html
+  nextjs:
+    image: node:20-alpine
+    working_dir: /app
+    volumes:
+      - ./frontend:/app
+    command: sh -lc "npm install && npm run dev -- -p 3000 -H 0.0.0.0"
+    environment:
+      - NEXT_TELEMETRY_DISABLED=1
+    ports:
+      - "3015:3000"
+volumes:
+  db_data:
